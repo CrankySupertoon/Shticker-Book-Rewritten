@@ -37,3 +37,7 @@ Makefile*
 #misc
 
 .directory
+
+# Binaries
+moc_predefs.h
+shticker-book-rewritten
