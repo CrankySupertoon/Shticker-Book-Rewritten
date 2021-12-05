@@ -53,7 +53,7 @@ This program relies on 2 external libraries: Qt 5 and libbzip2.  Bsdiff is also 
 
 ##### Ubuntu / Debian
 
-Required dependency packages: `qt5-qmake build-essential libbz2-dev`.  Qt's webengine is necessary but they do not provide packages.
+Required dependency packages: `qt5-qmake build-essential libbz2-dev qtwebengine5-dev`.
 
 To build and install:
 ```
