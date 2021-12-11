@@ -39,8 +39,7 @@ SOURCES += main.cpp\
     twofactorwindow.cpp \
     patchworker.cpp \
     filelocationchooser.cpp \
-    utilities.cpp
-    hashworker.cpp \
+    utilities.cpp \
     invasiontracker.cpp
 
 HEADERS  += launcherwindow.h \
@@ -53,8 +52,7 @@ HEADERS  += launcherwindow.h \
     twofactorwindow.h \
     patchworker.h \
     filelocationchooser.h \
-    utilities.h
-    hashworker.h \
+    utilities.h \
     invasiontracker.h
 
 FORMS    += launcherwindow.ui \

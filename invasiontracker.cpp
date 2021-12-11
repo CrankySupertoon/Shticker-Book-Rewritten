@@ -122,7 +122,7 @@ void InvasionTracker::invasionEnded(QString invasion)
 {
     QStringList list = invasion.split('/', QString::SkipEmptyParts, Qt::CaseSensitive);
 
-    trayIcon->showMessage(QString("Invasion has ended!"), QString("The ") + list[1] + QString("s have fled ") + list[0] + QString("."));
+    trayIcon->showMessage(QString("Invasion has ended!"), list[1] + QString("s have fled ") + list[0] + QString("."));
 }
 
 InvasionBlock::InvasionBlock(QWidget *parent, QString district, QString cog, QString progress) : QWidget(parent)
