@@ -62,6 +62,7 @@ LauncherWindow::LauncherWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui
     ui->groupsWebview->setUrl(QUrl("http://toonhq.org/groups/"));
     ui->bossRunsWebview->setUrl(QUrl("http://toonhq.org/ccg/"));
     ui->officesWebview->setUrl(QUrl("https://toonhq.org/field-offices/"));
+    ui->sillyTeamsWebview->setUrl(QUrl("https://toon.plus/sillymeter"));
 
     //change news view to a dark background since text is white
     connect(ui->newsWebview->page(), SIGNAL(loadFinished(bool)), this, SLOT(newsViewLoaded()));
@@ -257,7 +258,7 @@ void LauncherWindow::closeEvent(QCloseEvent *event)
 
 void LauncherWindow::newsViewLoaded()
 {
-    ui->newsWebview->page()->runJavaScript(QString("document.body.style.backgroundColor = \"#141618\";"));
+    ui->newsWebview->page()->runJavaScript(QString("document.getElementsByTagName(\"ul\")[0].style.color = \"black\";document.getElementsByTagName(\"a\")[0].style.color = \"black\";document.getElementsByTagName(\"a\")[1].style.color = \"black\";document.getElementsByTagName(\"a\")[2].style.color = \"black\";document.getElementsByTagName(\"a\")[3].style.color = \"black\";document.getElementsByTagName(\"a\")[4].style.color = \"black\";document.getElementsByTagName(\"a\")[5].style.color = \"black\";document.getElementsByTagName(\"a\")[6].style.color = \"black\";document.getElementsByTagName(\"a\")[7].style.color = \"black\";document.getElementsByTagName(\"a\")[8].style.color = \"black\";document.getElementsByTagName(\"a\")[9].style.color = \"black\";document.getElementsByTagName(\"a\")[10].style.color = \"black\""));
 }
 
 void LauncherWindow::toggleAutoUpdates()
