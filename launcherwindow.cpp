@@ -61,6 +61,7 @@ LauncherWindow::LauncherWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui
     ui->fishWebview->setUrl(QUrl("http://siggen.toontown-click.de/fishadvisor/en/fishes.html"));
     ui->groupsWebview->setUrl(QUrl("http://toonhq.org/groups/"));
     ui->bossRunsWebview->setUrl(QUrl("http://toonhq.org/ccg/"));
+    ui->officesWebview->setUrl(QUrl("https://toonhq.org/field-offices/"));
 
     //change news view to a dark background since text is white
     connect(ui->newsWebview->page(), SIGNAL(loadFinished(bool)), this, SLOT(newsViewLoaded()));
