@@ -40,6 +40,8 @@ SOURCES += main.cpp\
     patchworker.cpp \
     filelocationchooser.cpp \
     utilities.cpp
+    hashworker.cpp \
+    invasiontracker.cpp
 
 HEADERS  += launcherwindow.h \
     globaldefines.h \
@@ -52,6 +54,8 @@ HEADERS  += launcherwindow.h \
     patchworker.h \
     filelocationchooser.h \
     utilities.h
+    hashworker.h \
+    invasiontracker.h
 
 FORMS    += launcherwindow.ui \
     twofactorwindow.ui \

@@ -59,7 +59,6 @@ LauncherWindow::LauncherWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui
     //setup the webviews
     ui->newsWebview->setUrl(QUrl("https://www.toontownrewritten.com/news/launcher"));
     ui->fishWebview->setUrl(QUrl("http://siggen.toontown-click.de/fishadvisor/en/fishes.html"));
-    ui->invasionsWebview->setUrl(QUrl("https://toonhq.org/invasions/"));
     ui->groupsWebview->setUrl(QUrl("http://toonhq.org/groups/"));
     ui->bossRunsWebview->setUrl(QUrl("http://toonhq.org/ccg/"));
 
