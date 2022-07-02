@@ -258,7 +258,7 @@ void UpdateWorker::startDownload(QString fileToDownload)
     }
     else
     {
-        qDebug() << "Error downloding file" << downloadFileName << endl;
+        qDebug() << "Error downloding file" << downloadFileName;
     }
 }
 

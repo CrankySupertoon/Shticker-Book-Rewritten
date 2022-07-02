@@ -36,13 +36,6 @@ private:
     void invasionEnded(QString);
 };
 
-class InvasionsView : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit InvasionsView(QWidget *parent = 0);
-};
-
 class InvasionBlock : public QWidget
 {
     Q_OBJECT

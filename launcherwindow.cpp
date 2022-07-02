@@ -54,7 +54,7 @@ LauncherWindow::LauncherWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui
     ui->savedToonsBox->addItem("Saved logins");
     ui->savedToonsBox->addItems(savedUsers);
 
-    connect(ui->savedToonsBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fillCredentials(QString)));
+    connect(ui->savedToonsBox, SIGNAL(currentTextChanged(QString)), this, SLOT(fillCredentials(QString)));
 
     //setup the webviews
     ui->newsWebview->setUrl(QUrl("https://www.toontownrewritten.com/news/launcher"));
@@ -328,22 +328,17 @@ void LauncherWindow::readSettingsPath()
 
 void LauncherWindow::fillCredentials(QString username)
 {
-    if(username == "Saved logins")
+    int i = savedUsers.indexOf(username);
+
+    if(i == -1)
     {
         ui->usernameBox->clear();
         ui->passwordBox->clear();
         return;
     }
 
-    else
-    {
-        int i;
-        i = savedUsers.indexOf(username);
-
-        ui->usernameBox->setText(username);
-        ui->passwordBox->setText(savedPasses.at(i));
-    }
-
+    ui->usernameBox->setText(username);
+    ui->passwordBox->setText(savedPasses.at(i));
 }
 
 void LauncherWindow::updateFiles()

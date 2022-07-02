@@ -62,7 +62,7 @@ bool DownloadWorker::getFile(QUrl url, QString fileName)
     //connect the reply to our event loop to wait for the download to finish
     connect(reply, SIGNAL(finished()), &waitForFinished, SLOT(quit()));
     //send the data information to our progress bar
-    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(relayDownloadProgress(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(relayDownloadProgress(qint64,qint64)));
     connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
 
     //start the event loop to wait for the download to finish
@@ -78,7 +78,7 @@ bool DownloadWorker::getFile(QUrl url, QString fileName)
 
     if(reply->error())
     {
-        qDebug() << "There was an error downloading" << url << "Error:" << reply->errorString() << endl;
+        qDebug() << "There was an error downloading" << url << "Error:" << reply->errorString();
 
         reply->deleteLater();
 

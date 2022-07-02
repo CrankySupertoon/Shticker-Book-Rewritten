@@ -67,11 +67,11 @@ void JsonWorker::requestFinished()
     //Check for errors during parsing
     if(parseError->error != QJsonParseError::NoError)
     {
-        qDebug() << "Error parsing JSON file:" << parseError->errorString() << endl;
+        qDebug() << "Error parsing JSON file:" << parseError->errorString();
     }
     else
     {
-        qDebug() << "Successfully parsed JSON document\n";
+        qDebug() << "Successfully parsed JSON document";
     }
 
     emit documentReady(jsonDocument);
