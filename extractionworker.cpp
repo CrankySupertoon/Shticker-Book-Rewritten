@@ -52,7 +52,7 @@ bool ExtractionWorker::extractBz2(QString compressedFileName, QString extractedF
     compressedFile = fopen(compressedFileName.toStdString().c_str(), "rb");
     if(!compressedFile)
     {
-        qDebug() << "Error opening file: " << compressedFileName << endl;
+        qDebug() << "Error opening file: " << compressedFileName;
 
         return false;
     }
@@ -91,7 +91,7 @@ bool ExtractionWorker::extractBz2(QString compressedFileName, QString extractedF
     if(bzError != BZ_STREAM_END)
     {
         BZ2_bzReadClose(&bzError, bzFile);
-        qDebug() << "Error reading compressed file" << compressedFileName << ". BZ error code:" << bzError << endl;
+        qDebug() << "Error reading compressed file" << compressedFileName << ". BZ error code:" << bzError;
 
         return false;
     }

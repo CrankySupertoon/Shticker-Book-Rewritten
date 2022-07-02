@@ -47,53 +47,52 @@ Note: The packages available have been patched to replace webengine with webkit 
 
 ### How to Compile
 
-This program relies on 2 external libraries: Qt 5 and libbzip2.  Bsdiff is also used but are embedded into the project.
+This program relies on 2 external libraries: Qt 6 and libbzip2.  Bsdiff is also used but are embedded into the project.
 
 #### Linux based distros
 
 ##### Ubuntu / Debian
 
-Required dependency packages: `qt5-qmake build-essential libbz2-dev qtwebengine5-dev`.
+Required dependency packages: `qmake6 qt6-webengine-dev build-essential libbz2-dev`.
 
 To build and install:
 ```
-export QT_SELECT=qt5
-qmake
+qmake6
 make
 sudo make install
 ```
 
 ##### OpenSuse
 
-Required dependency packages: `libbz2-devel libqt5-qtwebengine-devel`
+Required dependency packages: `libbz2-devel qt6-webengine-devel`
 
 To build and install:
 ```
-qmake-qt5
+qmake6
 make
 sudo make install
 ````
 
 ##### Fedora
 
-Required dependency packages: `qt5-qtbase-devel qt5-qtwebengine-devel gcc-c++ bzip2-devel`.  Qt's webengine is necessary but they do not provide packages until Fedora 24 is released.
+Required dependency packages: `qt6-qtbase-devel qt6-qtwebengine-devel gcc-c++ bzip2-devel`.
 
 To build and install:
 ```
-qmake-qt5
+qmake6
 make
 sudo make install
 ````
 
 ##### Arch
 
-Required dependency packages: `bzip2 qt5-base qt5-webengine`.
+Required dependency packages: `bzip2 qt6-base qt6-webengine`.
 
 AUR package for the latest git version: https://aur.archlinux.org/packages/shticker-book-rewritten-git/.
 
 #### Windows
 
-The easiest way to compile this on Windows is to download Qt from their website (https://www.qt.io/download-open-source/) and install with at least Qt 5.5 and MinGW.  You will need to manually supply a built bzip2 library for Qt to use which you can download a pre-compiled one from http://sourceforge.net/projects/mingw/files/MinGW/Extension/bzip2/bzip2-1.0.6-4/.  You will need both the dev and dll-2 downloads.  Then copy the files to the Qt folders containing the build libraries.  You will also need openssl DLLs which can be downloaded from http://slproweb.com/products/Win32OpenSSL.html.  To make handling DLLs easier you may wish to add the Qt bin directory to your Windows PATH environment variable.
+The easiest way to compile this on Windows is to download Qt from their website (https://www.qt.io/download-open-source/) and install with at least Qt 6.0 and MinGW.  You will need to manually supply a built bzip2 library for Qt to use which you can download a pre-compiled one from http://sourceforge.net/projects/mingw/files/MinGW/Extension/bzip2/bzip2-1.0.6-4/.  You will need both the dev and dll-2 downloads.  Then copy the files to the Qt folders containing the build libraries.  You will also need openssl DLLs which can be downloaded from http://slproweb.com/products/Win32OpenSSL.html.  To make handling DLLs easier you may wish to add the Qt bin directory to your Windows PATH environment variable.
 
 #### Mac OS X
 

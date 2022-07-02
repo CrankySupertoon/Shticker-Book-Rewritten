@@ -73,7 +73,7 @@ void LoginWorker::initiateLogin(QString username, QString password)
     QUrlQuery postParameters;
     postParameters.addQueryItem("username", username);
     postParameters.addQueryItem("password", password);
-    postData.append(postParameters.toString());
+    postData.append(postParameters.toString().toUtf8());
 
     QByteArray replyData;
 
@@ -185,7 +185,7 @@ void LoginWorker::startTwoFactorAuthentication()
         //send a new API request with the provided token
         postParameters.addQueryItem("appToken", receivedToken);
         postParameters.addQueryItem("authToken", authToken);
-        postData.append(postParameters.toString());
+        postData.append(postParameters.toString().toUtf8());
 
         replyData = loginApiWorker(postData);
 
@@ -216,7 +216,7 @@ void LoginWorker::timerFinished()
 
     //send a new API request with our line token
     postParameters.addQueryItem("queueToken", lineToken);
-    postData.append(postParameters.toString());
+    postData.append(postParameters.toString().toUtf8());
 
     replyData = loginApiWorker(postData);
 

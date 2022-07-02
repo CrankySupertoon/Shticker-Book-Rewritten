@@ -112,7 +112,7 @@ void InvasionTracker::checkboxChanged(bool isChecked)
 void InvasionTracker::invasionStarted(QString district, QString cog, QString progress)
 {
     //separate the cog progress to get the total number
-    QStringList list = progress.split('/', QString::SkipEmptyParts, Qt::CaseSensitive);
+    QStringList list = progress.split('/', Qt::SkipEmptyParts, Qt::CaseSensitive);
 
     trayIcon->showMessage(QString("Invasion has started!"), list[1] + QString(" ") + cog + QString("s have taken over ") + district +
                           QString("!"));
@@ -120,7 +120,7 @@ void InvasionTracker::invasionStarted(QString district, QString cog, QString pro
 
 void InvasionTracker::invasionEnded(QString invasion)
 {
-    QStringList list = invasion.split('/', QString::SkipEmptyParts, Qt::CaseSensitive);
+    QStringList list = invasion.split('/', Qt::SkipEmptyParts, Qt::CaseSensitive);
 
     trayIcon->showMessage(QString("Invasion has ended!"), list[1] + QString("s have fled ") + list[0] + QString("."));
 }
@@ -128,18 +128,7 @@ void InvasionTracker::invasionEnded(QString invasion)
 InvasionBlock::InvasionBlock(QWidget *parent, QString district, QString cog, QString progress) : QWidget(parent)
 {
     //fix for glitch with cog names containing "\u0003"
-    if(cog == "Micro\u0003manager")
-    {
-        cog = "Micromanager";
-    }
-    else if(cog == "Blood\u0003sucker")
-    {
-        cog = "Bloodsucker";
-    }
-    else if(cog == "Tele\u0003marketer")
-    {
-        cog = "Telemarketer";
-    }
+    cog = cog.replace("\u0003", "");
 
     QGridLayout *layout = new QGridLayout(this);
     layout->setSizeConstraint(QLayout::SetFixedSize);
