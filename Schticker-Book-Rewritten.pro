@@ -69,6 +69,7 @@ RESOURCES += \
 LIBS += -lbz2
 
 DISTFILES += LICENSE
+
 unix:!mac {
     isEmpty(PREFIX):PREFIX = /usr
     BINDIR = $$PREFIX/bin
@@ -94,6 +95,10 @@ unix:!mac {
     icon128.files += resources/128x128/shticker-book-rewritten.png
     icon256.path = $$DATADIR/icons/hicolor/256x256/apps
     icon256.files += resources/256x256/shticker-book-rewritten.png
+}
+
+win32 {
+    LIBS += -luser32
 }
 
 RC_FILE = windows/shticker-book-rewritten.rc

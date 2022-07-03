@@ -28,7 +28,7 @@
 #include <QMainWindow>
 #include <QList>
 
-#ifdef __linux__
+#if defined(Q_OS_LINUX)
 #include <xdo.h>
 #undef Bool
 #undef CursorShape
@@ -42,6 +42,8 @@
 #undef Status
 #undef Unsorted
 #undef Type
+#elif defined(Q_OS_WIN)
+#include <windows.h>
 #endif
 
 namespace Ui {
@@ -96,7 +98,10 @@ private:
     bool keepAlive;
     QTimer *keepAliveTimer = nullptr;
 
-#ifdef __linux__
+#if defined(Q_OS_WIN)
+    unsigned int windowsKeptAlive;
+    static BOOL CALLBACK keepAliveWindowReceived(HWND hwnd, LPARAM lParam);
+#elif defined(Q_OS_LINUX)
     xdo_t *xdo = nullptr;
 #endif
 

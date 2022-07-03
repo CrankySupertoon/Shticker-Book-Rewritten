@@ -216,7 +216,7 @@ void UpdateWorker::patchManifestReady(QJsonDocument patchManifest)
     emit updateComplete();
 
     //on Linux platforms we need to check if TTREngine is executable since it isn't by default
-    #ifdef Q_OS_LINUX
+    #if defined(Q_OS_LINUX)
         #include <QFileInfo>
 
         QFileInfo engine(QString(filePath + "TTREngine"));

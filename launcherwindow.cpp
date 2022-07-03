@@ -192,6 +192,7 @@ void LauncherWindow::gameHasStarted(qint64 processId)
     //clear the username and password boxes to prevent accidental relaunching of the game and to be ready to launch another
     ui->usernameBox->clear();
     ui->passwordBox->clear();
+    ui->twofactorBox->clear();
     ui->savedToonsBox->setCurrentIndex(0);
 
     //add process id to running instances
@@ -206,7 +207,12 @@ void LauncherWindow::gameHasStarted(qint64 processId)
 }
 
 void LauncherWindow::runKeepAlive() {
-#ifdef __linux__
+#if defined(Q_OS_WIN)
+    windowsKeptAlive = 0;
+
+    //begin enumerating all windows
+    EnumWindows(keepAliveWindowReceived, (LPARAM) this);
+#elif defined(Q_OS_LINUX)
     xdo_search_t search;
     Window *windows;
     unsigned int windowCount;
@@ -231,8 +237,38 @@ void LauncherWindow::runKeepAlive() {
 
     //free memory allocated by xdo
     free(windows);
+#elif defined(Q_OS_MAC)
+    //use applescript to send an end key
+    QStringList arguments;
+    arguments << "-e" << "tell application \"Toontown Rewritten\" to key code 119";
+
+    QProcess process;
+    process.start("/usr/bin/osascript", arguments);
 #endif
 }
+
+#if defined(Q_OS_WIN)
+BOOL CALLBACK LauncherWindow::keepAliveWindowReceived(HWND handle, LPARAM lParam) {
+    //get the process id of this window
+    unsigned long process_id = 0;
+    GetWindowThreadProcessId(handle, &process_id);
+
+    LauncherWindow *window = (LauncherWindow *) lParam;
+
+    if(!window->gameInstances.contains(process_id))
+    {
+        //game window not found, keep searching
+        return true;
+    }
+
+    //process found
+    PostMessage(handle, WM_KEYDOWN, VK_END, 0);
+    PostMessage(handle, WM_KEYUP, VK_END, 0);
+
+    //continue enumerating windows if not all windows are found
+    return (++window->windowsKeptAlive) != window->gameInstances.size();
+}
+#endif
 
 void LauncherWindow::gameHasFinished(int exitCode, qint64 processId, QByteArray gameOutput)
 {
@@ -322,7 +358,7 @@ void LauncherWindow::updateKeepAliveTimer()
 {
     bool runKeepAlive = keepAlive && !gameInstances.empty();
 
-#ifdef __linux__
+#if defined(Q_OS_LINUX)
     if(runKeepAlive)
     {
         //create new xdo class to help iterate windows
@@ -359,7 +395,7 @@ void LauncherWindow::updateKeepAliveTimer()
             keepAliveTimer = nullptr;
         }
 
-#ifdef __linux__
+#if defined(Q_OS_LINUX)
         //free xdo class since we no longer need it
         if(xdo)
         {

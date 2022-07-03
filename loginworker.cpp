@@ -256,7 +256,7 @@ void LoginWorker::startGame(QString cookie, QString gameServer)
     gameEnvironment.insert("TTR_PLAYCOOKIE", cookie);
     gameEnvironment.insert("TTR_GAMESERVER", gameServer);
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
     gameEnvironment.insert("DYLD_LIBRARY_PATH", LIBRARY_PATH);
 #endif
 

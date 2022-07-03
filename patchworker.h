@@ -27,7 +27,7 @@
 //need to include winsock.h to define u_char for Windows
 //O_BINARY must be added to the open() functions for Windows but not for Linux
 #include <QtGlobal>
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
 #include <winsock.h>
 #define OPEN_ARGS O_RDONLY|O_BINARY
 #define WRITE_ARGS O_CREAT|O_TRUNC|O_WRONLY|O_BINARY
@@ -37,7 +37,7 @@
 #endif
 //*********************************************************
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
 #include <sys/types.h>
 #endif
 
