@@ -53,7 +53,7 @@ This program relies on 2 external libraries: Qt 6 and libbzip2.  Bsdiff is also 
 
 ##### Ubuntu / Debian
 
-Required dependency packages: `qmake6 qt6-webengine-dev build-essential libbz2-dev`.
+Required dependency packages: `qmake6 qt6-webengine-dev build-essential libbz2-dev libxdo-dev`.
 
 To build and install:
 ```
@@ -64,7 +64,7 @@ sudo make install
 
 ##### OpenSuse
 
-Required dependency packages: `libbz2-devel qt6-webengine-devel`
+Required dependency packages: `libbz2-devel qt6-webengine-devel xdotool-devel`
 
 To build and install:
 ```
@@ -75,7 +75,7 @@ sudo make install
 
 ##### Fedora
 
-Required dependency packages: `qt6-qtbase-devel qt6-qtwebengine-devel gcc-c++ bzip2-devel`.
+Required dependency packages: `qt6-qtbase-devel qt6-qtwebengine-devel gcc-c++ bzip2-devel xdotool-devel`.
 
 To build and install:
 ```
@@ -86,7 +86,7 @@ sudo make install
 
 ##### Arch
 
-Required dependency packages: `bzip2 qt6-base qt6-webengine`.
+Required dependency packages: `bzip2 qt6-base qt6-webengine xdotool`.
 
 AUR package for the latest git version: https://aur.archlinux.org/packages/shticker-book-rewritten-git/.
 
