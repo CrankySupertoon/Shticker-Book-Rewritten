@@ -40,8 +40,8 @@ public:
 
 signals:
     void sendMessage(QString);
-    void gameStarted();
-    void gameFinished(int, QByteArray);
+    void gameStarted(qint64);
+    void gameFinished(int, qint64, QByteArray);
     void authenticationFailed();
 
 public slots:

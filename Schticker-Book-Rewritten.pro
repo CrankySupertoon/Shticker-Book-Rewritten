@@ -83,6 +83,7 @@ unix:!mac {
         icon64 \
         icon128 \
         icon256
+    LIBS += -lxdo
     desktop.path = $$DATADIR/applications
     desktop.files += shticker-book-rewritten.desktop
     icon32.path = $$DATADIR/icons/hicolor/32x32/apps
