@@ -24,7 +24,7 @@
 #endif // GLOBALDEFINES_H
 
 //Platform Specific Configurations
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
 #define DEFAULT_PATH QDir::homePath() + QString("/.ttr")
 #define PLATFORM    "linux2"
 #define ENGINE_FILENAME QString("./TTREngine")

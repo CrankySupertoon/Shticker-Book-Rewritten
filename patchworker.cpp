@@ -55,7 +55,7 @@
 #include <fcntl.h>
 #include <QDebug>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
 #include "windows/fake_unistd.h"
 #define fseeko fseek
 #else

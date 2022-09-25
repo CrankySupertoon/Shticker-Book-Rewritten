@@ -28,6 +28,24 @@
 #include <QMainWindow>
 #include <QList>
 
+#if defined(Q_OS_LINUX)
+#include <xdo.h>
+#undef Bool
+#undef CursorShape
+#undef Expose
+#undef KeyPress
+#undef KeyRelease
+#undef FocusIn
+#undef FocusOut
+#undef FontChange
+#undef None
+#undef Status
+#undef Unsorted
+#undef Type
+#elif defined(Q_OS_WIN)
+#include <windows.h>
+#endif
+
 namespace Ui {
 class LauncherWindow;
 }
@@ -47,8 +65,8 @@ private slots:
     void relayHideProgressBar();
     void loginReady();
     void initiateLogin();
-    void gameHasStarted();
-    void gameHasFinished(int, QByteArray);
+    void gameHasStarted(qint64);
+    void gameHasFinished(int, qint64, QByteArray);
     void authenticationFailed();
     void newsViewLoaded();
     void fillCredentials(int);
@@ -56,6 +74,8 @@ private slots:
     void updateFiles();
     void updatesReady();
     void toggleAutoUpdates();
+    void toggleKeepAlive();
+    void runKeepAlive();
 
 signals:
     void sendMessage(QString);
@@ -69,13 +89,23 @@ private:
     Ui::LauncherWindow *ui;
     bool loginIsReady;
     LoginWorker *loginWorker;
-    int gameInstances;
+    QList<qint64> gameInstances;
     QThread *updateThread;
     QList<LauncherUser> savedUsers;
     QString filePath;
     QString cachePath;
     bool autoUpdate;
+    bool keepAlive;
+    QTimer *keepAliveTimer = nullptr;
 
+#if defined(Q_OS_WIN)
+    unsigned int windowsKeptAlive;
+    static BOOL CALLBACK keepAliveWindowReceived(HWND hwnd, LPARAM lParam);
+#elif defined(Q_OS_LINUX)
+    xdo_t *xdo = nullptr;
+#endif
+
+    void updateKeepAliveTimer();
     void readSettings();
     void readSettingsPath();
     void writeSettings();

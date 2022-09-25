@@ -34,12 +34,11 @@
 
 LauncherWindow::LauncherWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::LauncherWindow)
 {
-    gameInstances = 0;
-
     ui->setupUi(this);
     connect(this, SIGNAL(enableUpdate(bool)), ui->updateButton, SLOT(setEnabled(bool)));
     connect(ui->updatesCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleAutoUpdates()));
     connect(ui->updateButton, SIGNAL(clicked(bool)), this, SLOT(updateFiles()));
+    connect(ui->keepAliveCheckBox, SIGNAL(toggled(bool)), this, SLOT(toggleKeepAlive()));
 
     //read the previous settings
     readSettings();
@@ -113,7 +112,7 @@ void LauncherWindow::relayHideProgressBar()
 
 void LauncherWindow::updatesReady()
 {
-    if(gameInstances == 0)
+    if(gameInstances.empty())
     {
         emit enableUpdate(true);
     }
@@ -140,8 +139,8 @@ void LauncherWindow::initiateLogin()
         loginWorker = new LoginWorker(this);
 
         connect(loginWorker, SIGNAL(sendMessage(QString)), this, SLOT(relayMessage(QString)));
-        connect(loginWorker, SIGNAL(gameStarted()), this, SLOT(gameHasStarted()));
-        connect(loginWorker, SIGNAL(gameFinished(int, QByteArray)), this, SLOT(gameHasFinished(int, QByteArray)));
+        connect(loginWorker, SIGNAL(gameStarted(qint64)), this, SLOT(gameHasStarted(qint64)));
+        connect(loginWorker, SIGNAL(gameFinished(int,qint64,QByteArray)), this, SLOT(gameHasFinished(int,qint64,QByteArray)));
         connect(loginWorker, SIGNAL(authenticationFailed()), this, SLOT(authenticationFailed()));
 
         //start login and then the game
@@ -153,7 +152,7 @@ void LauncherWindow::initiateLogin()
     }
 }
 
-void LauncherWindow::gameHasStarted()
+void LauncherWindow::gameHasStarted(qint64 processId)
 {
     //disable updates while an instance is running
     emit enableUpdate(false);
@@ -193,23 +192,93 @@ void LauncherWindow::gameHasStarted()
     //clear the username and password boxes to prevent accidental relaunching of the game and to be ready to launch another
     ui->usernameBox->clear();
     ui->passwordBox->clear();
+    ui->twofactorBox->clear();
     ui->savedToonsBox->setCurrentIndex(0);
 
-    //increment to show how many instances are running
-    gameInstances++;
+    //add process id to running instances
+    gameInstances.push_back(processId);
+    qDebug() << "New game instance, there are now" << gameInstances.length();
 
-    qDebug() << "New game instance, there are now" << gameInstances;
+    //update keep alive
+    updateKeepAliveTimer();
 
     //enable login again now that the game has finished starting
     loginReady();
 }
 
-void LauncherWindow::gameHasFinished(int exitCode, QByteArray gameOutput)
-{
-    //increment to show how many instances are running
-    gameInstances--;
+void LauncherWindow::runKeepAlive() {
+#if defined(Q_OS_WIN)
+    windowsKeptAlive = 0;
 
-    qDebug() << "Game instance has closed, there are now" << gameInstances << "Exit code is:" << exitCode;
+    //begin enumerating all windows
+    EnumWindows(keepAliveWindowReceived, (LPARAM) this);
+#elif defined(Q_OS_LINUX)
+    xdo_search_t search;
+    Window *windows;
+    unsigned int windowCount;
+
+    memset(&search, 0, sizeof(xdo_search_t));
+    search.max_depth = -1;
+    search.require = xdo_search::SEARCH_ANY;
+    search.searchmask = SEARCH_NAME;
+    search.winname = "Toontown Rewritten";
+
+    //look for all toontown windows
+    if(xdo_search_windows(xdo, &search, &windows, &windowCount) != XDO_SUCCESS)
+    {
+        return;
+    }
+
+    //press end button for a split second on all toontown windows
+    for(unsigned int i = 0; i < windowCount; ++i)
+    {
+        xdo_send_keysequence_window(xdo, windows[i], "End", 0);
+    }
+
+    //free memory allocated by xdo
+    free(windows);
+#elif defined(Q_OS_MAC)
+    //use applescript to send an end key
+    QStringList arguments;
+    arguments << "-e" << "tell application \"Toontown Rewritten\" to key code 119";
+
+    QProcess process;
+    process.start("/usr/bin/osascript", arguments);
+#endif
+}
+
+#if defined(Q_OS_WIN)
+BOOL CALLBACK LauncherWindow::keepAliveWindowReceived(HWND handle, LPARAM lParam) {
+    //get the process id of this window
+    unsigned long process_id = 0;
+    GetWindowThreadProcessId(handle, &process_id);
+
+    LauncherWindow *window = (LauncherWindow *) lParam;
+
+    if(!window->gameInstances.contains(process_id))
+    {
+        //game window not found, keep searching
+        return true;
+    }
+
+    //process found
+    PostMessage(handle, WM_KEYDOWN, VK_END, 0);
+    PostMessage(handle, WM_KEYUP, VK_END, 0);
+
+    //continue enumerating windows if not all windows are found
+    return (++window->windowsKeptAlive) != window->gameInstances.size();
+}
+#endif
+
+void LauncherWindow::gameHasFinished(int exitCode, qint64 processId, QByteArray gameOutput)
+{
+    //remove process id from running instances
+    gameInstances.remove(processId);
+
+    //update keep alive
+    updateKeepAliveTimer();
+
+    qDebug() << "Game instance has closed, there are now" << gameInstances.length() << "Exit code is:" << exitCode;
 
     if(exitCode != 0)
     {
@@ -235,14 +304,14 @@ void LauncherWindow::authenticationFailed()
 void LauncherWindow::closeEvent(QCloseEvent *event)
 {
     //check if any game instances are running
-    if(gameInstances!=0)
+    if(!gameInstances.empty())
     {
         //create a dialog box to confirm exit and warn about running instances
         QMessageBox::StandardButton dialog;
         dialog = QMessageBox::warning(this,
                                       "Please confirm closing.",
                                       "Are you sure you would like to close?  Closing the launcher when any game instance is running will cause it to close.  There are currently "
-                                      + QString::number(gameInstances) + " instances running.",
+                                      + QString::number(gameInstances.length()) + " instances running.",
                                       QMessageBox::Yes | QMessageBox::No);
 
         if( dialog == QMessageBox::Yes)
@@ -274,16 +343,67 @@ void LauncherWindow::newsViewLoaded()
 
 void LauncherWindow::toggleAutoUpdates()
 {
-    if(ui->updatesCheckBox->isChecked())
+    autoUpdate = ui->updatesCheckBox->isChecked();
+    writeSettings();
+}
+
+void LauncherWindow::toggleKeepAlive()
+{
+    keepAlive = ui->keepAliveCheckBox->isChecked();
+    updateKeepAliveTimer();
+    writeSettings();
+}
+
+void LauncherWindow::updateKeepAliveTimer()
+{
+    bool runKeepAlive = keepAlive && !gameInstances.empty();
+
+#if defined(Q_OS_LINUX)
+    if(runKeepAlive)
     {
-        autoUpdate = true;
+        //create new xdo class to help iterate windows
+        if(!xdo)
+        {
+            xdo = xdo_new(nullptr);
+        }
+
+        //keep alive can only run if we have created xdo successfully
+        runKeepAlive = xdo != nullptr;
+    }
+#endif
+
+    if(runKeepAlive)
+    {
+        //only create timer if not running already
+        if(!keepAliveTimer)
+        {
+            qDebug() << "Starting keep alive...";
+            keepAliveTimer = new QTimer(this);
+            keepAliveTimer->setTimerType(Qt::VeryCoarseTimer);
+            connect(keepAliveTimer, SIGNAL(timeout()), this, SLOT(runKeepAlive()));
+            keepAliveTimer->start(60000);
+        }
     }
     else
     {
-        autoUpdate = false;
-    }
+        //only destroy timer if currently running
+        if(keepAliveTimer)
+        {
+            qDebug() << "Stopping keep alive...";
+            keepAliveTimer->stop();
+            keepAliveTimer->deleteLater();
+            keepAliveTimer = nullptr;
+        }
 
-    writeSettings();
+#if defined(Q_OS_LINUX)
+        //free xdo class since we no longer need it
+        if(xdo)
+        {
+            xdo_free(xdo);
+            xdo = nullptr;
+        }
+#endif
+    }
 }
 
 void LauncherWindow::writeSettings()
@@ -294,6 +414,7 @@ void LauncherWindow::writeSettings()
     settings.setValue("size", size());
     settings.setValue("pos", pos());
     settings.setValue("update", autoUpdate);
+    settings.setValue("keepalive", keepAlive);
     settings.endGroup();
 
     settings.beginGroup("Logins");
@@ -321,6 +442,7 @@ void LauncherWindow::readSettings()
     resize(settings.value("size", QSize(400, 400)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
     autoUpdate = settings.value("update", true).toBool();
+    keepAlive = settings.value("keepalive", false).toBool();
     settings.endGroup();
 
     savedUsers.clear();
@@ -345,10 +467,8 @@ void LauncherWindow::readSettings()
 
     settings.endGroup();
 
-    if(autoUpdate)
-    {
-        ui->updatesCheckBox->setChecked(true);
-    }
+    ui->updatesCheckBox->setChecked(autoUpdate);
+    ui->keepAliveCheckBox->setChecked(keepAlive);
 
     readSettingsPath();
 }

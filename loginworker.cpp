@@ -207,6 +207,7 @@ void LoginWorker::startTwoFactorAuthentication()
         jsonDocument = QJsonDocument::fromJson(replyData, parseError);   //parse the downloaded file into a JSON array
         jsonObject = jsonDocument.object();
     }
+
     if(jsonObject["success"].toString() != "false")
     {
         qDebug() << "Two Factor authentication complete";
@@ -255,7 +256,7 @@ void LoginWorker::startGame(QString cookie, QString gameServer)
     gameEnvironment.insert("TTR_PLAYCOOKIE", cookie);
     gameEnvironment.insert("TTR_GAMESERVER", gameServer);
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
     gameEnvironment.insert("DYLD_LIBRARY_PATH", LIBRARY_PATH);
 #endif
 
@@ -271,10 +272,10 @@ void LoginWorker::startGame(QString cookie, QString gameServer)
 
 void LoginWorker::gameHasStarted()
 {
-    emit gameStarted();
+    emit gameStarted(gameProcess->processId());
 }
 
 void LoginWorker::gameHasFinished(int exitCode)
 {
-    emit gameFinished(exitCode, gameProcess->readAllStandardError());
+    emit gameFinished(exitCode, gameProcess->processId(), gameProcess->readAllStandardError());
 }

@@ -106,105 +106,6 @@
             <property name="horizontalSpacing">
              <number>6</number>
             </property>
-            <item row="6" column="1">
-             <widget class="QComboBox" name="savedToonsBox">
-              <property name="currentText">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QProgressBar" name="progressBar">
-              <property name="value">
-               <number>0</number>
-              </property>
-              <property name="textVisible">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="statusLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>300</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Checking for updates.</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-              <property name="buddy">
-               <cstring>launcherView</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="1">
-             <widget class="QPushButton" name="goButton">
-              <property name="text">
-               <string>Launch!</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QCheckBox" name="saveCredentialsBox">
-              <property name="text">
-               <string>Save username and password</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLineEdit" name="usernameBox">
-              <property name="placeholderText">
-               <string>Username</string>
-              </property>
-              <property name="clearButtonEnabled">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="1">
-             <widget class="QLineEdit" name="passwordBox">
-              <property name="echoMode">
-               <enum>QLineEdit::Password</enum>
-              </property>
-              <property name="placeholderText">
-               <string>Password</string>
-              </property>
-              <property name="clearButtonEnabled">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QLineEdit" name="twofactorBox">
-              <property name="echoMode">
-               <enum>QLineEdit::Password</enum>
-              </property>
-              <property name="placeholderText">
-               <string>Two Factor Secret (Optional)</string>
-              </property>
-              <property name="clearButtonEnabled">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="1">
-             <widget class="QPushButton" name="updateButton">
-              <property name="text">
-               <string>Update Game Files</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <spacer name="verticalSpacer">
               <property name="orientation">
@@ -237,6 +138,105 @@
               </property>
               <property name="styleSheet">
                <string notr="true">background-image:url(:/resources/TTR_Logo.png);background-repeat:no-repeat;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="statusLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Checking for updates.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="buddy">
+               <cstring>launcherView</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QProgressBar" name="progressBar">
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="textVisible">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QComboBox" name="savedToonsBox">
+              <property name="currentText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLineEdit" name="usernameBox">
+              <property name="placeholderText">
+               <string>Username</string>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="passwordBox">
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>Password</string>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLineEdit" name="twofactorBox">
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>Two Factor Secret (Optional)</string>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QCheckBox" name="saveCredentialsBox">
+              <property name="text">
+               <string>Save username and password</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QPushButton" name="goButton">
+              <property name="text">
+               <string>Launch!</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="1">
+             <widget class="QPushButton" name="updateButton">
+              <property name="text">
+               <string>Update Game Files</string>
               </property>
              </widget>
             </item>
@@ -405,6 +405,13 @@
          <widget class="QCheckBox" name="updatesCheckBox">
           <property name="text">
            <string>Enable Automatic Game File Updates</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="keepAliveCheckBox">
+          <property name="text">
+           <string>Keep Toons Alive</string>
           </property>
          </widget>
         </item>
